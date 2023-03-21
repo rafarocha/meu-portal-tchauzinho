@@ -1,34 +1,35 @@
 const main = async () => {
-    const [owner, p1, p2, p3] = await hre.ethers.getSigners();
     const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
     const waveContract = await waveContractFactory.deploy();
     await waveContract.deployed();
+    console.log("Endereço do contrato:", waveContract.address);
   
-    console.log("Contract deployed to:", waveContract.address);
-    console.log("Contract deployed by:", owner.address);
-
     let waveCount;
     waveCount = await waveContract.getTotalWaves();
+    console.log(waveCount.toNumber());
   
-    let waveTxn = await waveContract.wave();
-    await waveTxn.wait();
+    /**
+     * Deixe-me enviar alguns tchauzinhos!
+     */
+    let waveTxn = await waveContract.wave("Uma mensagem!");
+    await waveTxn.wait(); // aguarda a transação ser minerada
   
-    waveCount = await waveContract.getTotalWaves();
+    const [_, randomPerson] = await hre.ethers.getSigners();
+    waveTxn = await waveContract.connect(randomPerson).wave("Outra mensagem!");
+    await waveTxn.wait(); // aguarda a transação ser minerada
   
-    waveTxn = await waveContract.connect(p1).wave();
-    await waveTxn.wait();
+    let allWaves = await waveContract.getAllWaves();
+    console.log(allWaves);
+  };
   
-    waveCount = await waveContract.getTotalWaves();
-};
-  
-const runMain = async () => {
+  const runMain = async () => {
     try {
-        await main();
-        process.exit(0);
+      await main();
+      process.exit(0);
     } catch (error) {
-        console.log(error);
-        process.exit(1);
+      console.log(error);
+      process.exit(1);
     }
-};
+  };
   
-runMain();
+  runMain();
