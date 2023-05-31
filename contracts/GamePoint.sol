@@ -47,5 +47,8 @@ contract GamePoint {
         return uint(keccak256(abi.encodePacked(block.timestamp, msg.sender))) % size;
     }
 
+    function wave(string memory _message) public {
+    }
+
 
 }

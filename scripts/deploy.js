@@ -5,13 +5,16 @@ const main = async () => {
     console.log("Deploying contracts with account: ", deployer.address);
     console.log("Account balance: ", accountBalance.toString());
   
-    const TokenG = await hre.ethers.getContractFactory("GamePoint");
-    const game = await TokenG.deploy();
+    const tokenG = await hre.ethers.getContractFactory("GamePoint");
+    const game = await tokenG.deploy();
     await game.deployed();
     console.log("GamePoint address: ", game.address);
 
-    const Token = await hre.ethers.getContractFactory("WavePortal");
-    const portal = await Token.deploy();
+    const token = await hre.ethers.getContractFactory("WavePortal");
+    const portal = await token.deploy({
+        value: hre.ethers.utils.parseEther("0.001"),
+    });
+
     await portal.deployed();
     console.log("WavePortal address: ", portal.address);
 };
